@@ -56,6 +56,7 @@ public class SwerveJoystickCMD extends CommandBase {
         turnSpeed = turnLimiter.calculate(turnSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond; 
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
+        
         if(fieldOrientedFunction.get()){
             //Field Relative
             ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed, swerveSubsystem.getRotation2D());

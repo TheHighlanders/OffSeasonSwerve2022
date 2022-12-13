@@ -1,0 +1,17 @@
+TASKS NEEDED TO SOFTWARE THE ROBOT:
+
+-PHYSICAL PARAMETERS-
+    Set Motor IDS in Code - Constants.java
+    Set Encoder IDS in Code - Constants.java
+
+    Edit the Track Width/Wheel Base Numbers // Fusion sketch 23.5 square, center point of each wheel
+    Check Constants.ModuleConstants (May be correct) (Wheel Diameter, Gear Ratios) //Verified Wheel Diameter ~4 (3.95)
+
+-SET ABSOLUTE ENCODER OFFSETS-
+    Square Wheels, and read values of absolue encoders
+
+-CONSTANTS CHECKS-
+
+    Teleop drive constants check (Physical max speed??)
+
+    PID Constants (yay) (Current Settings Might Work?)
