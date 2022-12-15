@@ -67,6 +67,8 @@ private final Joystick driverJoystick = new Joystick(OIConstants.kdriverJoystick
    */
   private void configureButtonBindings() {
     new JoystickButton(driverJoystick,2).whenPressed(()->swerveSubsystem.zeroHeading());
+
+    new JoystickButton(driverJoystick,4).whileHeld(() -> swerveSubsystem.encoderPrintoutDeg());
   }
 
   /**
