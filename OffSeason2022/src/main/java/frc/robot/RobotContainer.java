@@ -41,7 +41,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-private final Joystick driverJoystick = new Joystick(OIConstants.kdriverJoystick);
+private final XboxController driverJoystick = new XboxController(OIConstants.kdriverJoystick);
 
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 

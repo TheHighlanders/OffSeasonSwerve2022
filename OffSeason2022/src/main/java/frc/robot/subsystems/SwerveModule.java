@@ -12,6 +12,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//Encoder imports
+import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkMaxPIDController;
+
 
 public class SwerveModule {
 
@@ -23,7 +27,15 @@ public class SwerveModule {
 
   private final PIDController anglePIDController;
 
-  private final edu.wpi.first.wpilibj.AnalogInput absoluteEncoder;
+  //Alt Switch Code
+  private static final SparkMaxAlternateEncoder.Type kAltEncType = SparkMaxAlternateEncoder.Type.kQuadrature;
+  private static final int kCPR = 2048;
+    /**
+   * An alternate encoder object is constructed using the GetAlternateEncoder() 
+   * method on an existing CANSparkMax object.
+   */
+  private RelativeEncoder absoluteEncoder;
+
   private final boolean absoluteEncoderReversed;
   private final double absoluteEncoderOffsetRad;
 
@@ -32,8 +44,6 @@ public class SwerveModule {
   
     this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
     this.absoluteEncoderReversed = absoluteEncoderReversed;
-
-    absoluteEncoder = new edu.wpi.first.wpilibj.AnalogInput(absoluteEncoderID);
     
     driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
     angleMotor = new CANSparkMax(angleMotorID, MotorType.kBrushless);
@@ -44,6 +54,8 @@ public class SwerveModule {
     driveEncoder = driveMotor.getEncoder();
     angleEncoder = angleMotor.getEncoder();
 
+    //
+    absoluteEncoder = angleMotor.getAlternateEncoder(kAltEncType, kCPR);
     driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMotorEncoderRot2Meter);
     driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveMotorEncoderRPM2MeterPerSec);
     angleEncoder.setPositionConversionFactor(ModuleConstants.kAngleMotorEncoderRot2Rad);
@@ -72,7 +84,7 @@ public class SwerveModule {
   }
 
   public double getAbsoluteEncoderRad(){
-    double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
+    double angle = absoluteEncoder.getPosition();
     angle *= 2 *Math.PI;
     angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
@@ -81,6 +93,8 @@ public class SwerveModule {
   public void resetEncoders(){
     driveEncoder.setPosition(0);
     angleEncoder.setPosition(getAbsoluteEncoderRad());
+    absoluteEncoder.setPosition(0);
+
   }
 
   public SwerveModuleState getState(){
@@ -97,7 +111,8 @@ public class SwerveModule {
     state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
     angleMotor.set(anglePIDController.calculate(getAnglePosition(),state.angle.getRadians()));
-    SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
+    //SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
+    SmartDashboard.putString("Swerve[" + angleMotor.getDeviceId() + "] state", state.toString());
   }
 
   public void stop(){
