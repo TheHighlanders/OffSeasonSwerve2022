@@ -4,9 +4,12 @@ import com.revrobotics.AnalogInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+
 import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.DriveConstants;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -14,6 +17,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //Encoder imports
 import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 
 
@@ -26,6 +30,8 @@ public class SwerveModule {
   private final RelativeEncoder angleEncoder;
 
   private final PIDController anglePIDController;
+
+  private final SparkMaxLimitSwitch fakeLimit;
 
   //Alt Switch Code
   private static final SparkMaxAlternateEncoder.Type kAltEncType = SparkMaxAlternateEncoder.Type.kQuadrature;
@@ -54,8 +60,11 @@ public class SwerveModule {
     driveEncoder = driveMotor.getEncoder();
     angleEncoder = angleMotor.getEncoder();
 
+    fakeLimit = angleMotor.getForwardLimitSwitch(ModuleConstants.kEncoderFakeLimitType);
     //
     absoluteEncoder = angleMotor.getAlternateEncoder(kAltEncType, kCPR);
+
+
     driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMotorEncoderRot2Meter);
     driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveMotorEncoderRPM2MeterPerSec);
     angleEncoder.setPositionConversionFactor(ModuleConstants.kAngleMotorEncoderRot2Rad);
@@ -64,7 +73,7 @@ public class SwerveModule {
     anglePIDController = new PIDController(ModuleConstants.kPAngle, 0, 0);
     anglePIDController.enableContinuousInput(-Math.PI, Math.PI);
 
-    resetEncoders(); //MAY NEED TO CHANGE BC CUSTOM ABSOL ENCOD
+    homingRoutine(); //CHANGED FROM resetEncoders() UNTESTED
     }
 
   public double getDrivePosition(){
@@ -95,6 +104,21 @@ public class SwerveModule {
     angleEncoder.setPosition(getAbsoluteEncoderRad());
     absoluteEncoder.setPosition(0);
 
+  }
+
+  public void homingRoutine(){
+    while(-0.3 < absoluteEncoder.getPosition()  && absoluteEncoder.getPosition() < 0.3){
+      if(absoluteEncoder.getPosition() < 0){
+        angleMotor.set(-ModuleConstants.kAngleHomingSpeed); 
+      }
+      if(absoluteEncoder.getPosition() < 0){
+        angleMotor.set(ModuleConstants.kAngleHomingSpeed);
+      }
+    }
+
+    angleMotor.stopMotor();
+
+    absoluteEncoder.setPosition(0);
   }
 
   public SwerveModuleState getState(){

@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -29,6 +32,8 @@ public final class Constants {
         public static final double kAngleMotorEncoderRPM2RadPerSec = kAngleMotorEncoderRot2Rad / 60;
         public static final double kPAngle = 0.1;
 
+        public static final SparkMaxLimitSwitch.Type kEncoderFakeLimitType = Type.kNormallyOpen;
+        public static final double kAngleHomingSpeed = 0.25;
     }
 
     public static final class DriveConstants{
