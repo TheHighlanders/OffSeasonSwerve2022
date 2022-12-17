@@ -32,7 +32,7 @@ public final class Constants {
         public static final double kAngleMotorEncoderRPM2RadPerSec = kAngleMotorEncoderRot2Rad / 60;
         public static final double kPAngle = 0.1;
 
-        public static final SparkMaxLimitSwitch.Type kEncoderFakeLimitType = Type.kNormallyOpen;
+        public static final SparkMaxLimitSwitch.Type kEncoderFakeLimitType = Type.kNormallyClosed;
         public static final double kAngleHomingSpeed = 0.25;
     }
 
