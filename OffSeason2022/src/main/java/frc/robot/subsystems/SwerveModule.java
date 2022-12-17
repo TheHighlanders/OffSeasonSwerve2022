@@ -107,13 +107,8 @@ public class SwerveModule {
   }
 
   public void homingRoutine(){
-    while(-0.3 < absoluteEncoder.getPosition()  && absoluteEncoder.getPosition() < 0.3){
-      if(absoluteEncoder.getPosition() < 0){
-        angleMotor.set(-ModuleConstants.kAngleHomingSpeed); 
-      }
-      if(absoluteEncoder.getPosition() < 0){
-        angleMotor.set(ModuleConstants.kAngleHomingSpeed);
-      }
+    while(!fakeLimit.isPressed()){
+      angleMotor.set(ModuleConstants.kAngleHomingSpeed);
     }
 
     angleMotor.stopMotor();
