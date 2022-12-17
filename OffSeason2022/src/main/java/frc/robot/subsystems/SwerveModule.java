@@ -73,7 +73,7 @@ public class SwerveModule {
     anglePIDController = new PIDController(ModuleConstants.kPAngle, 0, 0);
     anglePIDController.enableContinuousInput(-Math.PI, Math.PI);
 
-    homingRoutine(); //CHANGED FROM resetEncoders() UNTESTED
+    //homingRoutine(); //Moved to AUTO command
     }
 
   public double getDrivePosition(){

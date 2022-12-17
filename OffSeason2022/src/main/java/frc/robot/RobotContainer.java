@@ -19,6 +19,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AUTOhomeModulesCMD;
 import frc.robot.commands.SwerveJoystickCMD;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -110,8 +111,9 @@ private final XboxController driverJoystick = new XboxController(OIConstants.kdr
       swerveSubsystem);
     
     return new SequentialCommandGroup(
-        new InstantCommand(()-> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
-        swerveControllerCommand,
+      new AUTOhomeModulesCMD(swerveSubsystem),
+        //new InstantCommand(()-> swerveSubsystem.resetOdometry(trajectory.getInitialPose())), // SOME TRAJECTORY STUFF: TODO: MIGRATE TO ACTUAL COMMAND
+        //swerveControllerCommand,
         new InstantCommand(()-> swerveSubsystem.stopModules())
     );
   } 
