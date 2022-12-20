@@ -3,7 +3,10 @@ package frc.robot.subsystems;
 import com.revrobotics.AnalogInput;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+
 import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.DriveConstants;
@@ -52,6 +55,12 @@ public class SwerveModule {
     anglePIDController = new PIDController(ModuleConstants.kPAngle, 0, 0);
     anglePIDController.enableContinuousInput(-Math.PI, Math.PI);
 
+    angleMotor.getForwardLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+    angleMotor.getReverseLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+
+    driveMotor.getForwardLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+    driveMotor.getReverseLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+
     resetEncoders(); //MAY NEED TO CHANGE BC CUSTOM ABSOL ENCOD
     }
 
@@ -88,6 +97,8 @@ public class SwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState state){
+    // angleMotor.set(anglePIDController.calculate(getAnglePosition(),state.angle.getRadians()));
+    SmartDashboard.putNumber("State Get RAD" + absoluteEncoder.getChannel() + ":", state.angle.getDegrees());
     if(Math.abs(state.speedMetersPerSecond) < 0.001){
       stop();
       return;
@@ -102,6 +113,5 @@ public class SwerveModule {
 
   public void stop(){
     driveMotor.set(0);
-    angleMotor.set(0);
   }
 }

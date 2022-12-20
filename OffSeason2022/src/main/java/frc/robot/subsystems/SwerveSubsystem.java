@@ -100,10 +100,10 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void encoderPrintoutDeg() {
-        SmartDashboard.putNumber("Front Left Encoder DEG", (frontLeft.getAbsoluteEncoderRad()*(180/Math.PI)));
-        SmartDashboard.putNumber("Front Right Encoder DEG", (frontRight.getAbsoluteEncoderRad()*(180/Math.PI)));
-        SmartDashboard.putNumber("Back Left Encoder DEG", (backLeft.getAbsoluteEncoderRad()*(180/Math.PI)));
-        SmartDashboard.putNumber("Back Right Encoder DEG", (backRight.getAbsoluteEncoderRad()*(180/Math.PI)));
+        SmartDashboard.putNumber("Front Left Encoder !DEG", (frontLeft.getAbsoluteEncoderRad()));
+        SmartDashboard.putNumber("Front Right Encoder !DEG", (frontRight.getAbsoluteEncoderRad()));
+        SmartDashboard.putNumber("Back Left Encoder !DEG", (backLeft.getAbsoluteEncoderRad()));
+        SmartDashboard.putNumber("Back Right Encoder !DEG", (backRight.getAbsoluteEncoderRad()));
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates){

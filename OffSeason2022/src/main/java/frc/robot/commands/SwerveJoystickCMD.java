@@ -57,12 +57,12 @@ public class SwerveJoystickCMD extends CommandBase {
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
         
-        if(fieldOrientedFunction.get()){
+        //if(fieldOrientedFunction.get()){
             //Field Relative
-            ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed, swerveSubsystem.getRotation2D());
-        }else{
+            //ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed, swerveSubsystem.getRotation2D());
+        //}else{
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
-        }
+        //}
         //Making Module States
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
