@@ -12,6 +12,7 @@ import frc.robot.Constants.DriveConstants;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -116,8 +117,8 @@ public class SwerveModule {
     absoluteEncoder.setPosition(0);
   }
 
-  public SwerveModuleState getState(){
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAnglePosition()));
+  public SwerveModulePosition getState(){
+    return new SwerveModulePosition(getDriveVelocity(), new Rotation2d(getAnglePosition()));
   }
 
   public void setDesiredState(SwerveModuleState state){
