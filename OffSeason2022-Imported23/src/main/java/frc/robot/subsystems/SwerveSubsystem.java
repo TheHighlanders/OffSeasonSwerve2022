@@ -6,11 +6,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.wpilibj.SPI;
 
 public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule frontLeft = new SwerveModule(
@@ -49,10 +50,14 @@ public class SwerveSubsystem extends SubsystemBase {
         DriveConstants.kBackRightAbsoluteEncoderOffsetRad, 
         DriveConstants.kBackRightAbsoluteEncoderReversed);
 
+
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
-        new Rotation2d(0));
+        new Rotation2d(0), new SwerveModulePosition[] {
+            frontLeft.getState(), frontRight.getState(),
+            backLeft.getState(),  backRight.getState()
+        } ); // Could Add OPTIONAL ROBOT Starting pose for field posing
 
     public SwerveSubsystem (){
         new Thread(() -> {
@@ -81,13 +86,19 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(pose, getRotation2D());
+        odometer.resetPosition(getRotation2D(), new SwerveModulePosition[] {
+            frontLeft.getState(), frontRight.getState(),
+            backLeft.getState(),  backRight.getState()
+        }, pose);
     }
 
     @Override
     public void periodic(){
         odometer.update(getRotation2D(), 
-            frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
+            new SwerveModulePosition[] {
+                frontLeft.getState(), frontRight.getState(),
+                backLeft.getState(),  backRight.getState()
+            });
         SmartDashboard.putNumber("Robot Heading", getHeading());
         SmartDashboard.putString("Robot Location", getPose2d().getTranslation().toString());
     }
@@ -111,13 +122,6 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.resetEncoders();
         backLeft.resetEncoders();
         backRight.resetEncoders();
-    }
-
-    public void encoderPrintoutDeg() {
-        SmartDashboard.putNumber("Front Left Encoder !DEG", (frontLeft.getAbsoluteEncoderRad()));
-        SmartDashboard.putNumber("Front Right Encoder !DEG", (frontRight.getAbsoluteEncoderRad()));
-        SmartDashboard.putNumber("Back Left Encoder !DEG", (backLeft.getAbsoluteEncoderRad()));
-        SmartDashboard.putNumber("Back Right Encoder !DEG", (backRight.getAbsoluteEncoderRad()));
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates){
