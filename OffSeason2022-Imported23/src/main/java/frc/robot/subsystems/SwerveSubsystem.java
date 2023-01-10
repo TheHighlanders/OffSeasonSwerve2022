@@ -111,10 +111,10 @@ public class SwerveSubsystem extends SubsystemBase {
     }
     
     public void homeAllModules(){
-        frontLeft.homingRoutine();
-        frontRight.homingRoutine();
-        backLeft.homingRoutine();
-        backRight.homingRoutine();
+        // frontLeft.homingRoutine();
+        // frontRight.homingRoutine();
+        // backLeft.homingRoutine();
+        // backRight.homingRoutine();
     }
 
     public void zeroAllModules(){
