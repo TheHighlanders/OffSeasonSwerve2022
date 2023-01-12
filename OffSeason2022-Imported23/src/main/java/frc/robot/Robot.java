@@ -5,8 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.encoderPrintout;
+import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -16,6 +20,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  //private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  //private final encoderPrintout encoderPrintoutCMD = new encoderPrintout(swerveSubsystem);
+  
+  
+ private final XboxController driverJoystick = new XboxController(OIConstants.kdriverJoystick);
 
   private RobotContainer m_robotContainer;
 
@@ -77,6 +86,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+  m_robotContainer.swerveSubsystem.zeroAllModules(); //MAY NEED TO CHANGE BC CUSTOM ABSOL ENCOD
   }
 
   /** This function is called periodically during operator control. */
@@ -87,11 +97,15 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
   }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    m_robotContainer.swerveSubsystem.encoderPrintoutDeg();
+
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

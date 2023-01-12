@@ -10,6 +10,8 @@ import java.util.function.Supplier;
 
 import frc.robot.commands.AUTOhomeModulesCMD;
 import frc.robot.commands.SwerveJoystickCMD;
+import frc.robot.commands.ZeroHeadingCMD;
+import frc.robot.commands.encoderPrintout;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AUTOsubsystem;
 
@@ -35,12 +37,15 @@ import frc.robot.Constants.OIConstants;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
 private final AUTOsubsystem auto = new AUTOsubsystem();
 
 private final XboxController driverJoystick = new XboxController(OIConstants.kdriverJoystick);
 
+//private final encoderPrintout encoderPrintoutCMD = new encoderPrintout(swerveSubsystem);
+
+private final ZeroHeadingCMD zeroHeadingCMD = new ZeroHeadingCMD(swerveSubsystem);
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -64,7 +69,9 @@ private final XboxController driverJoystick = new XboxController(OIConstants.kdr
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(driverJoystick,2).whenPressed(()->swerveSubsystem.zeroHeading());
+    new JoystickButton(driverJoystick,2).onTrue(zeroHeadingCMD);
+
+
   }
 
   /**

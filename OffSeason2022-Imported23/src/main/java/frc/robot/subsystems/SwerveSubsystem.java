@@ -124,6 +124,13 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.resetEncoders();
     }
 
+    public void encoderPrintoutDeg() {
+        SmartDashboard.putNumber("Front Left Encoder !DEG", (frontLeft.getAbsoluteEncoderRad()));
+        SmartDashboard.putNumber("Front Right Encoder !DEG", (frontRight.getAbsoluteEncoderRad()));
+        SmartDashboard.putNumber("Back Left Encoder !DEG", (backLeft.getAbsoluteEncoderRad()));
+        SmartDashboard.putNumber("Back Right Encoder !DEG", (backRight.getAbsoluteEncoderRad()));
+    }
+
     public void setModuleStates(SwerveModuleState[] desiredStates){
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         frontLeft.setDesiredState(desiredStates[0]);

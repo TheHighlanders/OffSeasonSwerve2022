@@ -62,7 +62,7 @@ public class SwerveModule {
     driveMotor.getForwardLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
     driveMotor.getReverseLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
 
-    resetEncoders(); //MAY NEED TO CHANGE BC CUSTOM ABSOL ENCOD
+   
     }
 
   public double getDrivePosition(){
@@ -98,8 +98,8 @@ public class SwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState state){
-    // angleMotor.set(anglePIDController.calculate(getAnglePosition(),state.angle.getRadians()));
-    SmartDashboard.putNumber("State Get RAD" + absoluteEncoder.getChannel() + ":", state.angle.getDegrees());
+    angleMotor.set(anglePIDController.calculate(getAnglePosition(), state.angle.getRadians()));
+    SmartDashboard.putNumber("State Get DEG" + absoluteEncoder.getChannel() + ":", state.angle.getDegrees());
     if(Math.abs(state.speedMetersPerSecond) < 0.001){
       stop();
       return;
@@ -108,7 +108,7 @@ public class SwerveModule {
     
     state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    angleMotor.set(anglePIDController.calculate(getAnglePosition(),state.angle.getRadians()));
+    //angleMotor.set(anglePIDController.calculate(getAnglePosition(),state.angle.getRadians()));
     SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
   }
 
