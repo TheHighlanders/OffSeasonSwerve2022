@@ -4,16 +4,20 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
+    private double previousAngle = 0;
+
     private final SwerveModule frontLeft = new SwerveModule(
         DriveConstants.kFrontLeftDrivePort, 
         DriveConstants.kFrontLeftAnglePort, 
@@ -137,5 +141,43 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
+    }
+
+    public SwerveModuleState[] getIKMathSwerveModuleStates(ChassisSpeeds chassisSpeeds){
+        double x = chassisSpeeds.vxMetersPerSecond;
+        double y = chassisSpeeds.vyMetersPerSecond;
+        double theta = chassisSpeeds.omegaRadiansPerSecond;
+
+        double[] moduleArrayX = new double[] {23.5, 23.5, -23.5, -23.5};
+        double[] moduleArrayY = new double[] {-23.5, 23.5, -23.5, 23.5};
+
+        SwerveModuleState[] out = new SwerveModuleState[4];
+
+        double angle;
+
+        if(x == 0 && y == 0){
+            angle = previousAngle; //Defaulted to 0
+
+        } else {
+            angle = Math.atan2(y,x);
+            previousAngle = angle;
+        }
+
+        // Rotation2d angleRot2d = new Rotation2d(angle);
+
+        // double speed = Math.sqrt(Math.pow(y,2) + Math.pow(x,2));
+
+        // for(int i = 0; i<4; i++){
+        //     out[i] = new SwerveModuleState(speed, angleRot2d);
+
+        // }
+        for(int i = 0; i<4; i++){
+            double moduleX = moduleArrayX[i];
+            double moduleY = moduleArrayY[i];
+
+
+            out[i] = new SwerveModuleState(theta, new Rotation2d(Math.toRadians(Math.atan2(moduleX, moduleY))));
+        }
+        return out;
     }
 }

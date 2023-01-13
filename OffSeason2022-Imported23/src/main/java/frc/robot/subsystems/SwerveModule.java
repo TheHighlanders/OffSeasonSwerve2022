@@ -98,7 +98,10 @@ public class SwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState state){
-    angleMotor.set(anglePIDController.calculate(getAnglePosition(), state.angle.getRadians()));
+    boolean useDashboard = SmartDashboard.getBoolean("Setpoint Control Enabled", false);
+    angleMotor.set(anglePIDController.calculate(getAnglePosition(), 
+      (useDashboard ? SmartDashboard.getNumber("Funny Setpoint Control", state.angle.getRadians()) : state.angle.getRadians())
+    ));
     SmartDashboard.putNumber("State Get DEG" + absoluteEncoder.getChannel() + ":", state.angle.getDegrees());
     if(Math.abs(state.speedMetersPerSecond) < 0.001){
       stop();

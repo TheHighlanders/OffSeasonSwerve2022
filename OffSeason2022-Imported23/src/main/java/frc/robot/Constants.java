@@ -25,12 +25,12 @@ public final class Constants {
     public static final class ModuleConstants{
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kDriveMotorGearRatio = 1.0f/5.8462;
-        public static final double kAngleMotorGearRatio = 1.0f/18.0f;
+        public static final double kAngleMotorGearRatio = 1.0f/12.8f;
         public static final double kDriveMotorEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
         public static final double kAngleMotorEncoderRot2Rad = kAngleMotorGearRatio * 2.0f * Math.PI;
         public static final double kDriveMotorEncoderRPM2MeterPerSec = kDriveMotorEncoderRot2Meter /60.0f;
         public static final double kAngleMotorEncoderRPM2RadPerSec = kAngleMotorEncoderRot2Rad / 60.0f;
-        public static final double kPAngle = 1;
+        public static final double kPAngle = 0.5;
 
         public static final SparkMaxLimitSwitch.Type kEncoderFakeLimitType = Type.kNormallyClosed;
         public static final double kAngleHomingSpeed = 0.25;
