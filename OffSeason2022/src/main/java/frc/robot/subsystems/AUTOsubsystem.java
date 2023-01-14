@@ -20,53 +20,45 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 
 public class AUTOsubsystem extends SubsystemBase {
-  /** Creates a new AUTOsubsystem. */
-    //Config Setup
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-      AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        .setKinematics(DriveConstants.kDriveKinematics);
-    
-    //create trajectroy from points
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0, 0, new Rotation2d(0)),
-      List.of(
-          new Translation2d(1,0),
-          new Translation2d(1,-1) 
-      ),
-      new Pose2d(2,-1, Rotation2d.fromDegrees(180)),
-      trajectoryConfig);
+    /** Creates a new AUTOsubsystem. */
+    // Config Setup
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,
+            AutoConstants.kMaxAccelerationMetersPerSecondSquared).setKinematics(DriveConstants.kDriveKinematics);
 
-    //PID Controllers for trajectory
+    // create trajectroy from points
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)),
+            List.of(new Translation2d(1, 0), new Translation2d(1, -1)),
+            new Pose2d(2, -1, Rotation2d.fromDegrees(180)), trajectoryConfig);
+
+    // PID Controllers for trajectory
     PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
     PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0, 
-      AutoConstants.kPThetaControllerConstraints);
-    
-      
+    ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
+            AutoConstants.kPThetaControllerConstraints);
 
-  public AUTOsubsystem() {
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    public AUTOsubsystem() {
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-  }
-  
-  public PIDController getXController(){
-    return xController;
-  }
+    }
 
-  public PIDController getYController(){
-    return yController;
-  }
+    public PIDController getXController() {
+        return xController;
+    }
 
-  public ProfiledPIDController getThetaController(){
-    return thetaController;
-  }
+    public PIDController getYController() {
+        return yController;
+    }
 
-  public Trajectory getTrajectory(){
-    return trajectory;
-  }
+    public ProfiledPIDController getThetaController() {
+        return thetaController;
+    }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+    public Trajectory getTrajectory() {
+        return trajectory;
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
 }

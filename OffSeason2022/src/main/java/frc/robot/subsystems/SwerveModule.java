@@ -1,117 +1,113 @@
 package frc.robot.subsystems;
-// BASED ON https://www.youtube.com/watch?v=0Xi9yb1IMyA
-import com.revrobotics.AnalogInput;
+
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
-import frc.robot.Constants;
-import frc.robot.Constants.ModuleConstants;
-import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
 
-  private final CANSparkMax driveMotor;
-  private final CANSparkMax angleMotor;
+    private final CANSparkMax driveMotor;
+    private final CANSparkMax angleMotor;
 
-  private final RelativeEncoder driveEncoder;
-  private final RelativeEncoder angleEncoder;
+    private final RelativeEncoder driveEncoder;
+    private final RelativeEncoder angleEncoder;
 
-  private final PIDController anglePIDController;
+    private final PIDController anglePIDController;
 
-  private final edu.wpi.first.wpilibj.AnalogInput absoluteEncoder;
-  private final boolean absoluteEncoderReversed;
-  private final double absoluteEncoderOffsetRad;
+    private final edu.wpi.first.wpilibj.AnalogInput absoluteEncoder;
+    private final boolean absoluteEncoderReversed;
+    private final double absoluteEncoderOffsetRad;
 
-  public SwerveModule(int driveMotorID, int angleMotorID, boolean driveMotorReversed, boolean angleMotorReversed, 
-  int absoluteEncoderID, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
-  
-    this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
-    this.absoluteEncoderReversed = absoluteEncoderReversed;
+    public SwerveModule(int driveMotorID, int angleMotorID, boolean driveMotorReversed, boolean angleMotorReversed,
+            int absoluteEncoderID, double absoluteEncoderOffset, boolean absoluteEncoderReversed) {
 
-    absoluteEncoder = new edu.wpi.first.wpilibj.AnalogInput(absoluteEncoderID);
-    
-    driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
-    angleMotor = new CANSparkMax(angleMotorID, MotorType.kBrushless);
- 
-    driveMotor.setInverted(driveMotorReversed);
-    angleMotor.setInverted(angleMotorReversed);
+        this.absoluteEncoderOffsetRad = absoluteEncoderOffset;
+        this.absoluteEncoderReversed = absoluteEncoderReversed;
 
-    driveEncoder = driveMotor.getEncoder();
-    angleEncoder = angleMotor.getEncoder();
+        absoluteEncoder = new edu.wpi.first.wpilibj.AnalogInput(absoluteEncoderID);
 
-    driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMotorEncoderRot2Meter);
-    driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveMotorEncoderRPM2MeterPerSec);
-    angleEncoder.setPositionConversionFactor(ModuleConstants.kAngleMotorEncoderRot2Rad);
-    angleEncoder.setVelocityConversionFactor(ModuleConstants.kAngleMotorEncoderRPM2RadPerSec);
+        driveMotor = new CANSparkMax(driveMotorID, MotorType.kBrushless);
+        angleMotor = new CANSparkMax(angleMotorID, MotorType.kBrushless);
 
-    anglePIDController = new PIDController(ModuleConstants.kPAngle, 0, 0);
-    anglePIDController.enableContinuousInput(-Math.PI, Math.PI);
+        driveMotor.setInverted(driveMotorReversed);
+        angleMotor.setInverted(angleMotorReversed);
 
-    angleMotor.getForwardLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
-    angleMotor.getReverseLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+        driveEncoder = driveMotor.getEncoder();
+        angleEncoder = angleMotor.getEncoder();
 
-    driveMotor.getForwardLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
-    driveMotor.getReverseLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+        driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveMotorEncoderRot2Meter);
+        driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveMotorEncoderRPM2MeterPerSec);
+        angleEncoder.setPositionConversionFactor(ModuleConstants.kAngleMotorEncoderRot2Rad);
+        angleEncoder.setVelocityConversionFactor(ModuleConstants.kAngleMotorEncoderRPM2RadPerSec);
 
-    resetEncoders(); //MAY NEED TO CHANGE BC CUSTOM ABSOL ENCOD
+        anglePIDController = new PIDController(ModuleConstants.kPAngle, 0, 0);
+        anglePIDController.enableContinuousInput(-Math.PI, Math.PI);
+
+        angleMotor.getForwardLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+        angleMotor.getReverseLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+
+        driveMotor.getForwardLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+        driveMotor.getReverseLimitSwitch(Type.kNormallyClosed).enableLimitSwitch(false);
+
+        resetEncoders();// MAY NEED TO CHANGE BC CUSTOM ABSOL ENCOD
     }
 
-  public double getDrivePosition(){
-    return driveEncoder.getPosition();
-  }
-
-  public double getAnglePosition(){
-    return angleEncoder.getPosition();
-  }
-
-  public double getDriveVelocity(){
-    return driveEncoder.getVelocity();
-  }
-
-  public double getAngleVelocity(){
-    return angleEncoder.getVelocity();
-  }
-
-  public double getAbsoluteEncoderRad(){
-    double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
-    angle *= 2.0 *Math.PI;
-    angle -= absoluteEncoderOffsetRad;
-    return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
-  }
-
-  public void resetEncoders(){
-    driveEncoder.setPosition(0);
-    angleEncoder.setPosition(getAbsoluteEncoderRad());
-  }
-
-  public SwerveModuleState getState(){
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAnglePosition()));
-  }
-
-  public void setDesiredState(SwerveModuleState state){
-    // angleMotor.set(anglePIDController.calculate(getAnglePosition(),state.angle.getRadians()));
-    SmartDashboard.putNumber("State Get RAD" + absoluteEncoder.getChannel() + ":", state.angle.getDegrees());
-    if(Math.abs(state.speedMetersPerSecond) < 0.001){
-      stop();
-      return;
+    public double getDrivePosition() {
+        return driveEncoder.getPosition();
     }
-    
-    
-    state = SwerveModuleState.optimize(state, getState().angle);
-    driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    angleMotor.set(anglePIDController.calculate(getAnglePosition(),state.angle.getRadians()));
-    SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
-  }
 
-  public void stop(){
-    driveMotor.set(0);
-  }
+    public double getAnglePosition() {
+        return angleEncoder.getPosition();
+    }
+
+    public double getDriveVelocity() {
+        return driveEncoder.getVelocity();
+    }
+
+    public double getAngleVelocity() {
+        return angleEncoder.getVelocity();
+    }
+
+    public double getAbsoluteEncoderRad() {
+        double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
+        angle *= 2.0 * Math.PI;
+        angle -= absoluteEncoderOffsetRad;
+        return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
+    }
+
+    public void resetEncoders() {
+        driveEncoder.setPosition(0);
+        angleEncoder.setPosition(getAbsoluteEncoderRad());
+    }
+
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAnglePosition()));
+    }
+
+    public void setDesiredState(SwerveModuleState state) {
+        // angleMotor.set(anglePIDController.calculate(getAnglePosition(),state.angle.getRadians()));
+        SmartDashboard.putNumber("State Get RAD" + absoluteEncoder.getChannel() + ":", state.angle.getDegrees());
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+
+        state = SwerveModuleState.optimize(state, getState().angle);
+        driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        angleMotor.set(anglePIDController.calculate(getAnglePosition(), state.angle.getRadians()));
+        SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
+    }
+
+    public void stop() {
+        driveMotor.set(0);
+    }
 }
