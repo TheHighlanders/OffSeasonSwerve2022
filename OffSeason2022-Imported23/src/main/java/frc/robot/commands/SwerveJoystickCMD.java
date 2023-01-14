@@ -75,7 +75,14 @@ public class SwerveJoystickCMD extends CommandBase {
         
         //moduleStates = swerveSubsystem.rateLimitModuleStates(moduleStates);
 
+        for(int i = 0; i < 4; i++){
+            moduleStates[i].speedMetersPerSecond = moduleStates[i].speedMetersPerSecond * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+
+        }
+
         swerveSubsystem.setModuleStates(moduleStates);
+
+        
     }
 
     @Override

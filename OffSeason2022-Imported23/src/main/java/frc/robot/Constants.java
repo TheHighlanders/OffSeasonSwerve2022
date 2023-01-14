@@ -47,6 +47,8 @@ public final class Constants {
 
         public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
         public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
+
+        
         
         //Size Info
         public static final double kTrackWidth = Units.inchesToMeters(23.5);
@@ -60,13 +62,15 @@ public final class Constants {
         
         
     //Module Info
+        public static final double kWheelOffsetFrontToSideways = Math.toRadians(90);
+        public static final double kHomingThetaRad = Math.toRadians(90);
         //Front Left
         public static final int kFrontLeftDrivePort = 2;
         public static final int kFrontLeftAnglePort = 4;
         public static final boolean kFrontLeftDriveReversed = false;
         public static final boolean kFrontLeftAngleReversed = false;
         public static final int kFrontLeftAbsoluteEncoderPort = 0;
-        public static final double kFrontLeftAbsoluteEncoderOffsetRad = 5.523136;
+        public static final double kFrontLeftAbsoluteEncoderOffsetRad = 5.519947;// + kWheelOffsetFrontToSideways;
         public static final boolean kFrontLeftAbsoluteEncoderReversed = true;
            
         //Front Right
@@ -75,7 +79,7 @@ public final class Constants {
         public static final boolean kFrontRightDriveReversed = false;
         public static final boolean kFrontRightAngleReversed = false;
         public static final int kFrontRightAbsoluteEncoderPort = 3;
-        public static final double kFrontRightAbsoluteEncoderOffsetRad = 1.875312;
+        public static final double kFrontRightAbsoluteEncoderOffsetRad = 1.861201;// + kWheelOffsetFrontToSideways;
         public static final boolean kFrontRightAbsoluteEncoderReversed = true;
         
         //Back Left
@@ -84,7 +88,7 @@ public final class Constants {
         public static final boolean kBackLeftDriveReversed = false;
         public static final boolean kBackLeftAngleReversed = false;
         public static final int kBackLeftAbsoluteEncoderPort = 1;
-        public static final double kBackLeftAbsoluteEncoderOffsetRad = 5.368937;
+        public static final double kBackLeftAbsoluteEncoderOffsetRad = 5.371961;// + kWheelOffsetFrontToSideways;
         public static final boolean kBackLeftAbsoluteEncoderReversed = true;
 
         //Back Right
@@ -93,7 +97,7 @@ public final class Constants {
         public static final boolean kBackRightDriveReversed = false;
         public static final boolean kBackRightAngleReversed = false;
         public static final int kBackRightAbsoluteEncoderPort = 2;
-        public static final double kBackRightAbsoluteEncoderOffsetRad = 6.004425;
+        public static final double kBackRightAbsoluteEncoderOffsetRad = 5.991324;// + kWheelOffsetFrontToSideways;
         public static final boolean kBackRightAbsoluteEncoderReversed = true;
     }
 

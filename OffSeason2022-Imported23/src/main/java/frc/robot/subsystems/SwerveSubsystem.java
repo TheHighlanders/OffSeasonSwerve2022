@@ -144,10 +144,10 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void encoderPrintoutDeg() {
-        SmartDashboard.putNumber("Front Left Encoder !DEG", (frontLeft.getAbsoluteEncoderRad()));
-        SmartDashboard.putNumber("Front Right Encoder !DEG", (frontRight.getAbsoluteEncoderRad()));
-        SmartDashboard.putNumber("Back Left Encoder !DEG", (backLeft.getAbsoluteEncoderRad()));
-        SmartDashboard.putNumber("Back Right Encoder !DEG", (backRight.getAbsoluteEncoderRad()));
+        SmartDashboard.putNumber("Front Left Encoder !DEG", (frontLeft.getAbsoluteEncoderRadNoOffset()));
+        SmartDashboard.putNumber("Front Right Encoder !DEG", (frontRight.getAbsoluteEncoderRadNoOffset()));
+        SmartDashboard.putNumber("Back Left Encoder !DEG", (backLeft.getAbsoluteEncoderRadNoOffset()));
+        SmartDashboard.putNumber("Back Right Encoder !DEG", (backRight.getAbsoluteEncoderRadNoOffset()));
     }
 
     public void setModuleStates(SwerveModuleState[] desiredStates) {
@@ -163,8 +163,8 @@ public class SwerveSubsystem extends SubsystemBase {
         double y = chassisSpeeds.vyMetersPerSecond;
         double theta = chassisSpeeds.omegaRadiansPerSecond;
 
-        double[][] moduleCoord_in = new double[][] { { 23.5, 23.5, -23.5, -23.5 },
-                { -23.5, 23.5, -23.5, 23.5 } };
+        double[][] moduleCoord_in = new double[][] { { -23.5, 23.5, -23.5, 23.5 },
+                { 23.5, 23.5, -23.5, -23.5 } };
         SwerveModuleState[] outLinear = new SwerveModuleState[4];
         SwerveModuleState[] outRotation = new SwerveModuleState[4];
         SwerveModuleState[] outSum = new SwerveModuleState[4];
@@ -186,9 +186,9 @@ public class SwerveSubsystem extends SubsystemBase {
         } else {
             linear_angle_component = Math.atan2(y, x);
             previousAngle = linear_angle_component;
-        }
+        } 
 
-        Rotation2d angleRot2d = new Rotation2d(linear_angle_component);
+        Rotation2d angleRot2d = new Rotation2d(linear_angle_component-DriveConstants.kHomingThetaRad);
 
         double speed = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));
 
@@ -201,7 +201,7 @@ public class SwerveSubsystem extends SubsystemBase {
             double moduleX = moduleCoord_in[0][i];
             double moduleY = moduleCoord_in[1][i];
 
-            outRotation[i] = new SwerveModuleState(theta, new Rotation2d(Math.atan2(moduleX, moduleY)));// TODO: make
+            outRotation[i] = new SwerveModuleState(theta, new Rotation2d(Math.atan2(moduleY, moduleX) + Math.toRadians(90) + DriveConstants.kHomingThetaRad));// TODO: make
                                                                                                         // this the
                                                                                                         // right order
         }
@@ -225,21 +225,21 @@ public class SwerveSubsystem extends SubsystemBase {
         return outSum;
     }
 
-    public SwerveModuleState[] rateLimitModuleStates(SwerveModuleState[] states){
-        SwerveModuleState[] out = new SwerveModuleState[4];
+    // public SwerveModuleState[] rateLimitModuleStates(SwerveModuleState[] states){
+    //     SwerveModuleState[] out = new SwerveModuleState[4];
         
-        for(int i = 0; i < 4; i++){
-            double speedLimit;
-            double angleLimit;  
+    //     for(int i = 0; i < 4; i++){
+    //         double speedLimit;
+    //         double angleLimit;  
 
-            speedLimit = speedLimiter[i].calculate(states[i].speedMetersPerSecond) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-            angleLimit = turnLimiter[i].calculate(states[i].angle.getRadians());
+    //         speedLimit = speedLimiter[i].calculate(states[i].speedMetersPerSecond) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    //         angleLimit = turnLimiter[i].calculate(states[i].angle.getRadians());
             
-            out[i] = new SwerveModuleState(speedLimit, new Rotation2d(angleLimit));
-        }
+    //         out[i] = new SwerveModuleState(speedLimit, new Rotation2d(angleLimit));
+    //     }
 
-        return out;
-    }
+    //     return out;
+    // }
 
     public void toggleFieldOrient() {
         fieldOrient = !fieldOrient;
