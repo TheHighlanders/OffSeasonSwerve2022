@@ -17,19 +17,14 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class SwerveJoystickCMD extends CommandBase {
     XboxController xbox = new XboxController(1);
     private final SwerveSubsystem swerveSubsystem; //MAYBE THESE NEED FINAL
-    private final Supplier<Double> xSpdFunction, ySpdFunction, turnSpdFunction;
-    private final Supplier<Boolean> fieldOrientedFunction;
+    private boolean fieldOriented;
     private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
 
-    public SwerveJoystickCMD(SwerveSubsystem swerveSubsystem, 
-        Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turnSpdFunction, 
-        Supplier<Boolean> fieldOrientedFunction) {
+    public SwerveJoystickCMD(SwerveSubsystem swerveSubsystem) {
         
         this.swerveSubsystem = swerveSubsystem;
-        this.xSpdFunction = xSpdFunction;
-        this.ySpdFunction = ySpdFunction;
-        this.turnSpdFunction = turnSpdFunction;
-        this.fieldOrientedFunction = fieldOrientedFunction;
+
+        this.fieldOriented = swerveSubsystem.getFieldOrient();
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.turnLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
@@ -50,29 +45,36 @@ public class SwerveJoystickCMD extends CommandBase {
         double xSpeed = xbox.getRawAxis(OIConstants.kDriverXAxis);
         double ySpeed = xbox.getRawAxis(OIConstants.kDriverYAxis);
         double turnSpeed = xbox.getRawAxis(OIConstants.kDriverTurnAxis);
-        DriverStation.reportWarning("Spiid: " + turnSpeed, false);
+        //DriverStation.reportWarning("Spiid: " + turnSpeed, false);
+
+        xSpeed *= -1;
+
         //Deadbanding
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-        turnSpeed =Math.abs(turnSpeed) > OIConstants.kDeadband ? turnSpeed : 0.0;
-        DriverStation.reportWarning("Spood: " + turnSpeed, false);
+        turnSpeed = Math.abs(turnSpeed) > OIConstants.kDeadband ? turnSpeed : 0.0;
+        //DriverStation.reportWarning("Spood: " + turnSpeed, false);
         //Ratelimiting
-        xSpeed = xLimiter.calculate(xSpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        turnSpeed = turnLimiter.calculate(turnSpeed) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond; 
-        DriverStation.reportWarning("Speed: " + turnSpeed, false);
+        //Moved to function in the Subsystem and done after IK
+        //DriverStation.reportWarning("Speed: " + turnSpeed, false);
         
+        fieldOriented = swerveSubsystem.getFieldOrient();
+
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
-        // if(fieldOrientedFunction.get()){
-        //     //Field Relative
-        //     ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed, swerveSubsystem.getRotation2D());
-        // }else{
-        chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
-        // }
+         if(fieldOriented){
+             //Field Relative
+             DriverStation.reportWarning("getHeading ", false);
+             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed, swerveSubsystem.getRotation2D());
+        }else{
+            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
+        }
         //Making Module States
         //SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
         SwerveModuleState[] moduleStates = swerveSubsystem.getIKMathSwerveModuleStates(chassisSpeeds);
         //Output to Wheels
+        
+        //moduleStates = swerveSubsystem.rateLimitModuleStates(moduleStates);
+
         swerveSubsystem.setModuleStates(moduleStates);
     }
 

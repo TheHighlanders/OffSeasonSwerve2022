@@ -98,7 +98,7 @@ public final class Constants {
     }
 
     public static final class OIConstants{
-        public static final double kDeadband = 0.5;
+        public static final double kDeadband = 0.05;
         public static final int kdriverJoystick = 1;
 
         public static final int kDriverXAxis = 0;

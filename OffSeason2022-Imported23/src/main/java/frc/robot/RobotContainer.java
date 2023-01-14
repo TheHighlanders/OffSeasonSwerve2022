@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import frc.robot.commands.AUTOhomeModulesCMD;
 import frc.robot.commands.SwerveJoystickCMD;
 import frc.robot.commands.ZeroHeadingCMD;
+import frc.robot.commands.ToggleFieldOrientedCMD;
 import frc.robot.commands.encoderPrintout;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AUTOsubsystem;
@@ -43,20 +44,17 @@ private final AUTOsubsystem auto = new AUTOsubsystem();
 
 private final XboxController driverJoystick = new XboxController(OIConstants.kdriverJoystick);
 
+
 //private final encoderPrintout encoderPrintoutCMD = new encoderPrintout(swerveSubsystem);
 
 private final ZeroHeadingCMD zeroHeadingCMD = new ZeroHeadingCMD(swerveSubsystem);
+
+private final ToggleFieldOrientedCMD toggleFieldOrientedCMD = new ToggleFieldOrientedCMD(swerveSubsystem);
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    swerveSubsystem.setDefaultCommand(new SwerveJoystickCMD(
-      swerveSubsystem,
-      () -> -driverJoystick.getRawAxis(OIConstants.kDriverXAxis),
-      () -> driverJoystick.getRawAxis(OIConstants.kDriverYAxis),
-      () -> driverJoystick.getRawAxis(OIConstants.kDriverTurnAxis),
-      () -> !driverJoystick.getRawButton(OIConstants.kDriverFieldOrientButton)
-    ));
+    swerveSubsystem.setDefaultCommand(new SwerveJoystickCMD(swerveSubsystem));
     
     // Configure the button bindings
     configureButtonBindings();
@@ -71,6 +69,7 @@ private final ZeroHeadingCMD zeroHeadingCMD = new ZeroHeadingCMD(swerveSubsystem
   private void configureButtonBindings() {
     new JoystickButton(driverJoystick,2).onTrue(zeroHeadingCMD);
 
+    new JoystickButton(driverJoystick, 1).onTrue(toggleFieldOrientedCMD);
 
   }
 
