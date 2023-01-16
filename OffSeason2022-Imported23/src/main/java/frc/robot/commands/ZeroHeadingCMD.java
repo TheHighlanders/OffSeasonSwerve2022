@@ -10,6 +10,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class ZeroHeadingCMD extends CommandBase {
   /** Creates a new ZeroHeadingCMD. */
   private final SwerveSubsystem swerveSubsystem;
+
   public ZeroHeadingCMD(SwerveSubsystem swerve_subsystem) {
     swerveSubsystem = swerve_subsystem;
     addRequirements(swerve_subsystem);
@@ -30,7 +31,8 @@ public class ZeroHeadingCMD extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

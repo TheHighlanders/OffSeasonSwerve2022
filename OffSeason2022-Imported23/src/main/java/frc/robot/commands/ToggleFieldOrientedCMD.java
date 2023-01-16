@@ -11,6 +11,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class ToggleFieldOrientedCMD extends CommandBase {
   /** Creates a new ToggleFieldOrientedCMD. */
   private final SwerveSubsystem swerveSubsystem;
+
   public ToggleFieldOrientedCMD(SwerveSubsystem swerve_subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     swerveSubsystem = swerve_subsystem;
@@ -26,11 +27,13 @@ public class ToggleFieldOrientedCMD extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

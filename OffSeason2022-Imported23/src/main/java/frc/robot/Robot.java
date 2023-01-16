@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.encoderPrintout;
-import frc.robot.subsystems.SwerveSubsystem;
+//import frc.robot.commands.encoderPrintout;
+//import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,9 +23,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   //private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   //private final encoderPrintout encoderPrintoutCMD = new encoderPrintout(swerveSubsystem);
-  
-  
- private final XboxController driverJoystick = new XboxController(OIConstants.kdriverJoystick);
+
+  private final XboxController driverJoystick = new XboxController(OIConstants.kdriverJoystick);
 
   private RobotContainer m_robotContainer;
 
@@ -58,10 +57,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -76,7 +77,8 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
   public void teleopInit() {
@@ -89,12 +91,13 @@ public class Robot extends TimedRobot {
     }
     SmartDashboard.putNumber("Funny Setpoint Control", 0);
     SmartDashboard.putBoolean("Setpoint Control Enabled", false);
-  m_robotContainer.swerveSubsystem.zeroAllModules(); //MAY NEED TO CHANGE BC CUSTOM ABSOL ENCOD
+    m_robotContainer.swerveSubsystem.zeroAllModules(); //MAY NEED TO CHANGE BC CUSTOM ABSOL ENCOD
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {
@@ -112,9 +115,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }

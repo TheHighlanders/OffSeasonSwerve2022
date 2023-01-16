@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import java.util.function.Supplier;
+//import java.util.function.Supplier;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Translation2d;
+//import edu.wpi.first.math.filter.SlewRateLimiter;
+//import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,26 +18,26 @@ public class SwerveJoystickCMD extends CommandBase {
     XboxController xbox = new XboxController(1);
     private final SwerveSubsystem swerveSubsystem; //MAYBE THESE NEED FINAL
     private boolean fieldOriented;
-    private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
+    //private final SlewRateLimiter xLimiter, yLimiter, turnLimiter;
 
     public SwerveJoystickCMD(SwerveSubsystem swerveSubsystem) {
-        
+
         this.swerveSubsystem = swerveSubsystem;
 
         this.fieldOriented = swerveSubsystem.getFieldOrient();
-        this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-        this.turnLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+        //this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+        //this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+        //this.turnLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
         addRequirements(swerveSubsystem);
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
 
     }
 
     @Override
-    public void execute(){
+    public void execute() {
         //Get Joystick Readings
         // double xSpeed = xSpdFunction.get();
         // double ySpeed = ySpdFunction.get();
@@ -45,9 +45,8 @@ public class SwerveJoystickCMD extends CommandBase {
         double xSpeed = xbox.getRawAxis(OIConstants.kDriverXAxis);
         double ySpeed = xbox.getRawAxis(OIConstants.kDriverYAxis);
         double turnSpeed = xbox.getRawAxis(OIConstants.kDriverTurnAxis);
-        //DriverStation.reportWarning("Spiid: " + turnSpeed, false);
 
-        xSpeed *= -1;
+        xSpeed *= -1; //invert the direction of the robot movement on the x-axis.
 
         //Deadbanding
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
@@ -57,41 +56,42 @@ public class SwerveJoystickCMD extends CommandBase {
         //Ratelimiting
         //Moved to function in the Subsystem and done after IK
         //DriverStation.reportWarning("Speed: " + turnSpeed, false);
-        
+
         fieldOriented = swerveSubsystem.getFieldOrient();
 
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
-         if(fieldOriented){
-             //Field Relative
-             DriverStation.reportWarning("getHeading ", false);
-             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed, swerveSubsystem.getRotation2D());
-        }else{
+        if (fieldOriented) { //
+            //Field Relative
+            DriverStation.reportWarning("getHeading ", false);
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turnSpeed,
+                    swerveSubsystem.getRotation2D());
+        } else {
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turnSpeed);
         }
         //Making Module States
         //SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
         SwerveModuleState[] moduleStates = swerveSubsystem.getIKMathSwerveModuleStates(chassisSpeeds);
         //Output to Wheels
-        
+
         //moduleStates = swerveSubsystem.rateLimitModuleStates(moduleStates);
 
-        for(int i = 0; i < 4; i++){
-            moduleStates[i].speedMetersPerSecond = moduleStates[i].speedMetersPerSecond * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        for (int i = 0; i < 4; i++) {
+            moduleStates[i].speedMetersPerSecond = moduleStates[i].speedMetersPerSecond
+                    * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
 
         }
 
         swerveSubsystem.setModuleStates(moduleStates);
 
-        
     }
 
     @Override
-    public void end(boolean interrupted){
+    public void end(boolean interrupted) {
         swerveSubsystem.stopModules();
     }
 
     @Override
-    public boolean isFinished(){
+    public boolean isFinished() {
         return false;
     }
 }

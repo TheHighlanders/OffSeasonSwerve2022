@@ -6,9 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
+
 public class encoderPrintout extends CommandBase {
   /** Creates a new encoderPrintout. */
-private final SwerveSubsystem swerveSubsystem;
+  private final SwerveSubsystem swerveSubsystem;
 
   public encoderPrintout(SwerveSubsystem swerve_subsystem) {
     swerveSubsystem = swerve_subsystem;
@@ -18,17 +19,19 @@ private final SwerveSubsystem swerveSubsystem;
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      swerveSubsystem.encoderPrintoutDeg();
+    swerveSubsystem.encoderPrintoutDeg();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

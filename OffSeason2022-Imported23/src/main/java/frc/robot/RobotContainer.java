@@ -4,20 +4,20 @@
 
 package frc.robot;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.function.Supplier;
+//import java.time.Instant;
+//import java.util.List;
+//import java.util.function.Supplier;
 
 import frc.robot.commands.AUTOhomeModulesCMD;
 import frc.robot.commands.SwerveJoystickCMD;
 import frc.robot.commands.ZeroHeadingCMD;
 import frc.robot.commands.ToggleFieldOrientedCMD;
-import frc.robot.commands.encoderPrintout;
+//import frc.robot.commands.encoderPrintout;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AUTOsubsystem;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
+//import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -25,10 +25,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.Constants.AutoConstants;
+//import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,24 +37,23 @@ import frc.robot.Constants.OIConstants;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-private final AUTOsubsystem auto = new AUTOsubsystem();
+  private final AUTOsubsystem auto = new AUTOsubsystem();
 
-private final XboxController driverJoystick = new XboxController(OIConstants.kdriverJoystick);
+  private final XboxController driverJoystick = new XboxController(OIConstants.kdriverJoystick);
 
+  //private final encoderPrintout encoderPrintoutCMD = new encoderPrintout(swerveSubsystem);
 
-//private final encoderPrintout encoderPrintoutCMD = new encoderPrintout(swerveSubsystem);
+  private final ZeroHeadingCMD zeroHeadingCMD = new ZeroHeadingCMD(swerveSubsystem);
 
-private final ZeroHeadingCMD zeroHeadingCMD = new ZeroHeadingCMD(swerveSubsystem);
-
-private final ToggleFieldOrientedCMD toggleFieldOrientedCMD = new ToggleFieldOrientedCMD(swerveSubsystem);
+  private final ToggleFieldOrientedCMD toggleFieldOrientedCMD = new ToggleFieldOrientedCMD(swerveSubsystem);
   //private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCMD(swerveSubsystem));
-    
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -67,7 +65,7 @@ private final ToggleFieldOrientedCMD toggleFieldOrientedCMD = new ToggleFieldOri
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(driverJoystick,2).onTrue(zeroHeadingCMD);
+    new JoystickButton(driverJoystick, 2).onTrue(zeroHeadingCMD);
 
     new JoystickButton(driverJoystick, 1).onTrue(toggleFieldOrientedCMD);
 
@@ -82,20 +80,19 @@ private final ToggleFieldOrientedCMD toggleFieldOrientedCMD = new ToggleFieldOri
 
     //Construct Auto Swerve Command Using Points and Objects from AUTOsubsystem (auto)
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-      auto.getTrajectory(),
-      swerveSubsystem::getPose2d,
-      DriveConstants.kDriveKinematics,
-      auto.getXController(),
-      auto.getYController(),
-      auto.getThetaController(),
-      swerveSubsystem::setModuleStates,
-      swerveSubsystem);
-    
+        auto.getTrajectory(),
+        swerveSubsystem::getPose2d,
+        DriveConstants.kDriveKinematics,
+        auto.getXController(),
+        auto.getYController(),
+        auto.getThetaController(),
+        swerveSubsystem::setModuleStates,
+        swerveSubsystem);
+
     return new SequentialCommandGroup(
-      new AUTOhomeModulesCMD(swerveSubsystem),
+        new AUTOhomeModulesCMD(swerveSubsystem),
         //new InstantCommand(()-> swerveSubsystem.resetOdometry(trajectory.getInitialPose())), // SOME TRAJECTORY STUFF: TODO: MIGRATE TO ACTUAL COMMAND
         //swerveControllerCommand,
-        new InstantCommand(()-> swerveSubsystem.stopModules())
-    );
-  } 
+        new InstantCommand(() -> swerveSubsystem.stopModules()));
+  }
 }
