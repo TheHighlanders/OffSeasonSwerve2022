@@ -168,7 +168,7 @@ public class SwerveSubsystem extends SubsystemBase {
         double y = chassisSpeeds.vyMetersPerSecond;
         double theta = chassisSpeeds.omegaRadiansPerSecond;
 
-        double[][] moduleCoord_in = new double[][] { { -23.5, 23.5, -23.5, 23.5 }, { 23.5, 23.5, -23.5, -23.5 } }; //TODO: move to constants: enumeration type ex: FrontLeft, FrontRight, BackLeft,BackRight
+        double[][] moduleCoord_in = new double[][] { { -DriveConstants.kTrackWidth/2, DriveConstants.kTrackWidth/2, -DriveConstants.kTrackWidth/2, DriveConstants.kTrackWidth/2 }, { DriveConstants.kWheelBase/2, DriveConstants.kTrackWidth/2, -DriveConstants.kTrackWidth/2, -DriveConstants.kTrackWidth/2 } }; //TODO: move to constants: enumeration type ex: FrontLeft, FrontRight, BackLeft,BackRight
         SwerveModuleState[] outLinear = new SwerveModuleState[4]; //linearSpeeds
         SwerveModuleState[] outRotation = new SwerveModuleState[4]; //rotationSpeeds
         SwerveModuleState[] outSum = new SwerveModuleState[4]; //finalSpeeds
